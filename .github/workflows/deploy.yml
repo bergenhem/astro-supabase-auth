@@ -29,7 +29,7 @@ jobs:
       name: Staging
     needs: [automated-tests]
     runs-on: ubuntu-latest
-    # only run this on PRs merged into main
+    # only run this workflow on main
     if: github.event.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
