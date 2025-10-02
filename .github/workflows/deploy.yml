@@ -1,0 +1,76 @@
+# This is a workflow that emulates pushing to staging and production environments (hosted on Netlify)
+
+name: Deploy App
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # This is a no-op job to pretend that we are running automated tests to simulate a full workflow
+  automated-tests:
+    name: Automated Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+      - run: npm install
+      - run: npm install build --if-present
+      - run: npm test
+          
+  deploy-staging:
+    name: "Deploy to Staging"
+    environment:
+      name: Staging
+    needs: [automated-tests]
+    runs-on: ubuntu-latest
+    # only run this on PRs merged into main
+    if: github.event.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+      - run: npm install
+      - run: npm run build --if-present
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ''
+          NETLIFY_SIDE_ID: ''
+        with:
+          args: deploy --dir=dist --prod
+  deploy-production:
+    name: "Deploy to Production"
+    environment:
+      name: Production
+    needs: [automated-tests, deploy-staging]
+    runs-on: ubuntu-latest
+    # only run this on PRs merged into main
+    if: github.event.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24.x
+      - run: npm install
+      - run: npm run build --if-present
+      - name: Deploy to Netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ''
+          NETLIFY_SIDE_ID: ''
+        with:
+          args: deploy --dir=dist --prod
+        
