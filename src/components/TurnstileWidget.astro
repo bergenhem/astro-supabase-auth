@@ -1,6 +1,5 @@
 ---
 const siteKey = import.meta.env.TURNSTILE_SITE_KEY;
-import "../scripts/turnstile-callbacks.ts";
 ---
 
 <div
@@ -11,6 +10,20 @@ import "../scripts/turnstile-callbacks.ts";
     data-callback="onTurnstileSuccess"
 >
 </div>
+
+<script type="module">
+    const cfWidget = document.querySelector(".cf-turnstile");
+    const clickedButton = document.querySelector(
+        "button[data-turnstile-button]",
+    );
+
+    const onSuccess = (token) => {
+        if (clickedButton) clickedButton.disabled = false;
+    };
+
+    // Cloudflare requires a global callback?
+    window.onTurnstileSuccess = onSuccess;
+</script>
 
 <script
     is:inline
