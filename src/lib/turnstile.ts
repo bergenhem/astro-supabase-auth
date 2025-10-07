@@ -1,4 +1,4 @@
-const turnstileSecretKey = import.meta.env.TURNSTILE_SECRET_KEY;
+import { TURNSTILE_SECRET_KEY } from "astro:env/server";
 
 export const validateTurnstile = async (token: string) => {
   try {
@@ -11,7 +11,7 @@ export const validateTurnstile = async (token: string) => {
           Accept: "application/json",
         },
         body: new URLSearchParams({
-          secret: turnstileSecretKey,
+          secret: TURNSTILE_SECRET_KEY,
           response: token,
         }),
       },
