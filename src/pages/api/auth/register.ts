@@ -2,32 +2,7 @@
 // export const prerender = false;
 import type { APIRoute } from "astro";
 import { supabase } from "../../../lib/supabase";
-
-const turnstileSecretKey = import.meta.env.TURNSTILE_SECRET_KEY;
-
-async function validateTurnstile(token: string) {
-  try {
-    const response = await fetch(
-      `https://challenges.cloudflare.com/turnstile/v0/siteverify`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-        },
-        body: new URLSearchParams({
-          secret: turnstileSecretKey,
-          response: token,
-        }),
-      },
-    );
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error("Turnstile validation error:  ", error);
-    return { success: false, "error-codes": ["internal-error"] };
-  }
-}
+import { validateTurnstile } from "../../../lib/turnstile";
 
 export const POST: APIRoute = async ({ request, redirect }) => {
   const formData = await request.formData();
