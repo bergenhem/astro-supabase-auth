@@ -1,14 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import TurnstileWidget from "../components/TurnstileWidget.astro";
 
 const turnstileKey = import.meta.env.TURNSTILE_SITE_KEY;
 ---
 
-<script
-    is:inline
-    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-    async
-    defer></script>
+<script src="./src/scripts/turnstile-callbacks.ts" is:inline></script>
 
 <Layout title="Register">
     <p>Already have an account? <a href="/signin">Sign in</a></p>
@@ -17,22 +14,7 @@ const turnstileKey = import.meta.env.TURNSTILE_SITE_KEY;
         <input type="email" id="email" name="email" />
         <label for="password">Password</label>
         <input type="password" id="password" name="password" />
-        <div
-            class="cf-turnstile"
-            data-response-field-name="cf-turnstile-response"
-            data-sitekey={turnstileKey}
-            data-size="normal"
-            data-callback="onTurnstileSuccess"
-        >
-        </div>
-        <button id="register-button" type="submit" disabled>Register</button>
+        <TurnstileWidget siteKey={turnstileKey} />
+        <button data-turnstile-button type="submit" disabled>Register</button>
     </form>
-    <script>
-        window.onTurnstileSuccess = (token) => {
-            const registerButton = document.getElementById(
-                "register-button",
-            ) as HTMLButtonElement;
-            registerButton.disabled = false;
-        };
-    </script>
 </Layout>

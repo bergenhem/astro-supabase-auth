@@ -1,0 +1,18 @@
+---
+const siteKey = Astro.props.siteKey;
+---
+
+<div
+    class="cf-turnstile"
+    data-response-field-name="cf-turnstile-response"
+    data-sitekey={siteKey}
+    data-size="normal"
+    data-callback="onTurnstileSuccess"
+>
+</div>
+
+<script
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
