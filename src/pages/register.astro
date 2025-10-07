@@ -1,6 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const turnstileKey = import.meta.env.TURNSTILE_SITE_KEY;
 ---
+
+<script
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer></script>
 
 <Layout title="Register">
     <p>Already have an account? <a href="/signin">Sign in</a></p>
@@ -9,6 +17,21 @@ import Layout from "../layouts/Layout.astro";
         <input type="email" id="email" name="email" />
         <label for="password">Password</label>
         <input type="password" id="password" name="password" />
-        <button type="submit">Register</button>
+        <div
+            class="cf-turnstile"
+            data-sitekey={turnstileKey}
+            data-size="normal"
+            data-callback="onTurnstileSuccess"
+        >
+        </div>
+        <button id="register-button" type="submit" disabled>Register</button>
     </form>
+    <script>
+        window.onTurnstileSuccess = (token) => {
+            const registerButton = document.getElementById(
+                "register-button",
+            ) as HTMLButtonElement;
+            registerButton.disabled = false;
+        };
+    </script>
 </Layout>
