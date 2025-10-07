@@ -3,8 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import TurnstileWidget from "../components/TurnstileWidget.astro";
 ---
 
-<script src="./src/scripts/turnstile-callbacks.ts" is:inline></script>
-
 <Layout title="Sign in">
     <p>New here? <a href="/register">Create an account</a></p>
     <form action="/api/auth/signin" method="POST">
