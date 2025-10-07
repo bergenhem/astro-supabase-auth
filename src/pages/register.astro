@@ -1,8 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import TurnstileWidget from "../components/TurnstileWidget.astro";
-
-const turnstileKey = import.meta.env.TURNSTILE_SITE_KEY;
 ---
 
 <script src="./src/scripts/turnstile-callbacks.ts" is:inline></script>
@@ -14,7 +12,7 @@ const turnstileKey = import.meta.env.TURNSTILE_SITE_KEY;
         <input type="email" id="email" name="email" />
         <label for="password">Password</label>
         <input type="password" id="password" name="password" />
-        <TurnstileWidget siteKey={turnstileKey} />
+        <TurnstileWidget />
         <button data-turnstile-button type="submit" disabled>Register</button>
     </form>
 </Layout>
